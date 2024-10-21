@@ -3,6 +3,7 @@
 #include <thread>
 #include <algorithm>
 #include <mutex>
+#include <windows.h>
 #include <condition_variable>
 
 // Custom quicksort implementation using iterators
@@ -122,4 +123,42 @@ void sort_and_print_doubles_parallel(RandomIt first, RandomIt last)
 		std::cout << *it << '\n';
 	}
 	std::cout << std::endl;
+}
+
+
+inline void set_thread_affinity(int core_id) 
+{
+	HANDLE thread = GetCurrentThread(); 
+	DWORD_PTR mask = 1 << core_id;       
+	SetThreadAffinityMask(thread, mask);
+}
+
+template <typename RandomIt>
+void parallel_sort(RandomIt start, RandomIt end, int core_id) 
+{
+	set_thread_affinity(core_id);
+	std::sort(start, end);
+}
+
+template <typename RandomIt>
+void sort_with_affinity(RandomIt first, RandomIt last)
+{
+	const int num_threads = 8;
+	std::vector<std::thread> threads;
+	size_t chunk_size = std::distance(first, last) / num_threads;
+
+	for (int i = 0; i < num_threads; ++i)
+	{
+		auto start = first + i * chunk_size; 
+		auto next = (i == num_threads - 1) ? last : start + chunk_size;
+
+		threads.emplace_back(parallel_sort<RandomIt>, start, next, i); 
+	}
+
+	for (auto& t : threads) 
+	{
+		t.join();
+	}
+
+	std::sort(first, last);
 }

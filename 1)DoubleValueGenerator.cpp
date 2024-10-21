@@ -2,7 +2,7 @@
 #include <random>
 #include <set>
 
-// Function to generate and print a set of unique double values
+// Function to generate and print a vector of unique double values
 std::vector<double> generate_unique_doubles(double min, double max, size_t num_values) 
 {
     std::random_device rd;
@@ -63,7 +63,8 @@ std::vector<double> generate_unique_doubles(double min, double max, size_t num_v
         }
         break;
     }
-    case 4: {
+    case 4: 
+    {
         // Lognormal distribution
         double mean = (min + max) / 2.0;
         double stddev = (max - min) / 6.0;
@@ -78,7 +79,8 @@ std::vector<double> generate_unique_doubles(double min, double max, size_t num_v
         }
         break;
     }
-    case 5: {
+    case 5: 
+    {
         // Cauchy distribution
         double median = (min + max) / 2.0;
         double scale = (max - min) / 4.0;

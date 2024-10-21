@@ -1,0 +1,4 @@
+Sorting Algorithm, Time (microseconds)/1000000 elements
+STD Quicksort,1015975
+Custom Quicksort,5224565
+8-Thread Quicksort,1271430
